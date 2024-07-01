@@ -24,8 +24,15 @@ public class GameManagerClick : MonoBehaviour
     private float spawnTimer = 0f;
     private float SPAWN_TIME = 0.2f;
 
-    [SerializeField] private LongClickButton mainMenuBtn;
+    private int _clicks;
     
+    [SerializeField] private LongClickButton mainMenuBtn;
+
+    public GameManagerClick()
+    {
+        _clicks = 0;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -86,5 +93,10 @@ public class GameManagerClick : MonoBehaviour
     public void MainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void ObjectClicked()
+    {
+        _clicks++;
     }
 }

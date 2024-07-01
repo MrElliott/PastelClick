@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,6 +10,9 @@ public class ParticleManager : MonoBehaviour
     private int maxParticleSystems;
     [SerializeField]
     private Transform ParticlePrefab;
+
+    [SerializeField]
+    private AudioClip popSound;
     
     private Transform[] ParticleSystems;
     
@@ -32,6 +36,7 @@ public class ParticleManager : MonoBehaviour
         
         ps.position = pos;
         ps.GetComponent<ParticleSystem>().Play();
+        PlayClipAtPoint();
     }
 
     private Transform GetFreeParticleSystem()
@@ -69,5 +74,16 @@ public class ParticleManager : MonoBehaviour
         }
 
         return rtnT;
+    }
+    
+    // Method to play an audio clip at a specific position
+    public void PlayClipAtPoint(float volume = 1.0f)
+    {
+        GameObject tempGO = new GameObject("TempAudio"); // create the temp object
+        AudioSource aSource = tempGO.AddComponent<AudioSource>(); // add an audio source
+        aSource.clip = popSound; // define the clip
+        aSource.volume = volume;
+        aSource.Play(); // start the sound
+        Object.Destroy(tempGO, popSound.length); // destroy object after clip duration
     }
 }

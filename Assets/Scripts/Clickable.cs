@@ -9,6 +9,7 @@ public class Clickable : MonoBehaviour
         Debug.Log("Object clicked!"); // Placeholder action (print message)
         
         FindObjectOfType<ParticleManager>().PlayParticle(transform.position);
+        FindObjectOfType<GameManagerClick>().ObjectClicked();
         
         Destroy(transform.gameObject);
     }
