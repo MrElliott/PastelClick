@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
 public class GameManagerClick : MonoBehaviour
 {
     [SerializeField]
@@ -27,6 +30,11 @@ public class GameManagerClick : MonoBehaviour
     private int _clicks;
     
     [SerializeField] private LongClickButton mainMenuBtn;
+    
+    // Reference to the UI Canvas' GraphicRaycaster
+    public GraphicRaycaster raycaster;
+    // Reference to the EventSystem
+    public EventSystem eventSystem;
 
     public GameManagerClick()
     {
@@ -53,8 +61,62 @@ public class GameManagerClick : MonoBehaviour
             spawnTimer = 0f;
             SpawnObjectAt(GetRandomPositionInView());
         }
+
+        ClickCheck();
     }
-   
+
+
+    void ClickCheck()
+    {
+        #if UNITY_EDITOR || UNITY_STANDALONE
+        
+        if (Input.GetMouseButtonDown(0)) // Left mouse button acts like touch began
+        {
+            SimulateTouch(Input.mousePosition);
+        }
+        
+        #else
+        
+        // Check for multiple touch inputs
+        if (Input.touchCount > 0)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                Touch touch = Input.GetTouch(i);
+
+                // Handle touch based on its phase
+                if (touch.phase == TouchPhase.Began)
+                {
+                    Debug.Log("Touching");
+                    SimulateTouch(touch.position);
+                }
+            }
+        }
+        #endif
+    }
+
+    void SimulateTouch(Vector2 touchPos)
+    {
+        // Convert the screen point to world point in 2D space
+        Vector2 worldPoint = Camera.main.ScreenToWorldPoint(touchPos);
+        
+        RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero, Mathf.Infinity);
+
+        
+        // Perform the raycast
+        if (hit.collider != null)
+        {
+            // Check if the hit object has a Button-like component (e.g., custom script)
+            Clickable myButton = hit.collider.GetComponent<Clickable>();
+
+            if (myButton != null)
+            {
+                // Simulate button click or trigger behavior
+                myButton.ClickLogic();
+                Debug.Log("3D Button " + myButton.name + " clicked with touch");
+            }
+        }
+    }
 
     void SpawnObjectAt(Vector2 pos)
     {

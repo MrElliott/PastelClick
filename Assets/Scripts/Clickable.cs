@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Clickable : MonoBehaviour
 {
-    void OnClick()
+    public void OnClick()
+    {
+        
+    }
+
+    public void ClickLogic()
     {
         Debug.Log("Object clicked!"); // Placeholder action (print message)
         
@@ -17,6 +22,6 @@ public class Clickable : MonoBehaviour
     // Called when a collider attached to this object is clicked
     void OnMouseDown()
     {
-        OnClick();
+        //OnClick();
     }
 }
